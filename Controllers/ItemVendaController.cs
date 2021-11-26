@@ -25,7 +25,7 @@ namespace server.Controllers
             {
                 item.CarrinhoId = Guid.NewGuid().ToString();
             }
-            item.Produto = _context.Produtos.Find(item.ProdutoId);
+            item.Produto = _context.Produtos.Find(item.Produto.Id);
             _context.ItensVenda.Add(item);
             _context.SaveChanges();
             return Created("", item);
@@ -33,12 +33,12 @@ namespace server.Controllers
 
         // GET: server/item/getbycartid/XXXXX-XXXX-XXXXXXXXXXX
         [HttpGet]
-        [Route("getbycartid/{cartid}")]
-        public IActionResult GetByCartId([FromRoute] string cartId)
+        [Route("getbycartid/{cartid?}")]
+        public IActionResult GetByCartId(string cartid)
         {
             return Ok(_context.ItensVenda.
                 Include(i => i.Produto.Categoria).
-                Where(i => i.CarrinhoId == cartId).
+                Where(i => i.CarrinhoId == cartid).
                 ToList());
         }
     }

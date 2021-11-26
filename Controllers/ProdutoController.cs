@@ -47,12 +47,12 @@ namespace server.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{name}")]
-        public IActionResult Delete([FromRoute] string name)
+        [Route("delete/{nome}")]
+        public IActionResult Delete([FromRoute] string nome)
         {
             //Expressão lambda
             //Buscar um objeto na tabela de produtos com base no nome
-            Produto produto = _context.Produtos.FirstOrDefault(produto => produto.Nome == name);
+            Produto produto = _context.Produtos.FirstOrDefault(produto => produto.Nome == nome);
 
             if (produto == null)
             {

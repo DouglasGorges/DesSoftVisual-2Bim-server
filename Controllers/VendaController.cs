@@ -2,6 +2,8 @@ using System.Linq;
 using server.Data;
 using server.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace server.Controllers
 {
@@ -15,12 +17,34 @@ namespace server.Controllers
             _context = context;
         }
 
-        //ALTERAR O MÉTODO PARA MOSTRAR TODOS OS DADOS DA VENDA E OS DADOS RELACIONADOS
         [HttpGet]
         [Route("list")]
-        public IActionResult List()
+        public List<Venda> List()
         {
-            return Ok(_context.Vendas.ToList());
+            return _context.Vendas.
+                Include(i => i.Itens).
+                ToList();
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public Venda Create(Venda venda)
+        {
+            _context.Vendas.Add(venda);
+            _context.SaveChanges();
+            return venda;
+        }
+
+        [HttpGet]
+        [Route("getbyid/{id}")]
+        public IActionResult GetById([FromRoute] int id)
+        {
+            Venda venda = _context.Vendas.Find(id);
+            if (venda == null)
+            {
+                return NotFound();
+            }
+            return Ok(venda);
         }
     }
 }
